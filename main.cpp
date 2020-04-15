@@ -42,7 +42,127 @@ send me a DM to check your pull request
  */
 
 #include <iostream>
+using namespace std;
+
+
+ struct FloatType
+ {
+    float add( float lhs, float rhs );
+    float subtract( float lhs, float rhs );
+    float multiply( float lhs, float rhs );
+    float divide( float lhs, float rhs );
+ };
+
+ struct DoubleType
+ {
+    double add( double lhs, double rhs );
+    double subtract( double lhs, double rhs );
+    double multiply( double lhs, double rhs );
+    double divide( double lhs, double rhs );
+ };
+
+ struct IntType
+ {
+    int add( int lhs, int rhs );
+    int subtract( int lhs, int rhs );
+    int multiply( int lhs, int rhs );
+    int divide( int lhs, int rhs );
+ };
+
+//=============================================================
+
+float FloatType::add( float lhs, float rhs )
+{
+    return lhs + rhs;
+}
+
+float FloatType::subtract( float lhs, float rhs )
+{
+    return lhs - rhs;
+}
+
+float FloatType::multiply( float lhs, float rhs )
+{
+    return lhs * rhs;
+}
+
+float FloatType::divide( float lhs, float rhs )
+{
+    if (rhs == 0.f)
+    {
+        cout << "watch out when dividing with zero!\n" << endl;
+    }
+    
+    return lhs / rhs;
+}
+
+
+double DoubleType::add( double lhs, double rhs )
+{
+    return lhs + rhs;
+}
+
+double DoubleType::subtract( double lhs, double rhs )
+{
+    return lhs - rhs;
+}
+
+double DoubleType::multiply( double lhs, double rhs )
+{
+    return lhs * rhs;
+}
+
+double DoubleType::divide( double lhs, double rhs )
+{
+    if (rhs == 0.)
+    {
+        cout << "watch out when dividing with zero!\n" << endl;
+    }
+    
+    return lhs / rhs;
+}
+
+int IntType::add( int lhs, int rhs )
+{
+    return lhs + rhs;
+}
+
+int IntType::subtract( int lhs, int rhs )
+{
+    return lhs - rhs;
+}
+
+int IntType::multiply( int lhs, int rhs )
+{
+    return lhs * rhs;
+}
+    
+int IntType::divide( int lhs, int rhs )
+{
+    if(rhs == 0) 
+    {
+        cout << "\nwatch out when dividing with zero! especially when using int. returned zero\n" << endl;
+        return 0;
+    }
+    
+    return lhs / rhs;
+}
+
+
 int main()
 {
+    FloatType ft;
+    auto resultDiv = ft.divide( 3.2f, 0.5f);
+    cout << "result of ft.add(): " << resultDiv << endl;
+
+    auto resultMult = ft.multiply(2.f, 3.5f);
+    cout << "result of fr.multiply: " << resultMult << endl;
+
+    auto resultSubst = ft.subtract(2.5, 1.5);
+    cout << "result of fr.subtract: " << resultSubst << endl;
+
+    IntType it;
+    it.divide(0, 1);
+
     std::cout << "good to go!" << std::endl;
 }
