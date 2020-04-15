@@ -88,11 +88,7 @@ float FloatType::multiply( float lhs, float rhs )
 
 float FloatType::divide( float lhs, float rhs )
 {
-    if (lhs == 0.f)
-    {
-        cout << "watch out when dividing with zero!\n" << endl;
-    }
-    else if (rhs == 0.f )
+    if (rhs == 0.f)
     {
         cout << "watch out when dividing with zero!\n" << endl;
     }
@@ -118,11 +114,7 @@ double DoubleType::multiply( double lhs, double rhs )
 
 double DoubleType::divide( double lhs, double rhs )
 {
-    if (lhs == 0.)
-    {
-        cout << "watch out when dividing with zero!\n" << endl;
-    }
-    else if (rhs == 0. )
+    if (rhs == 0.)
     {
         cout << "watch out when dividing with zero!\n" << endl;
     }
@@ -147,12 +139,7 @@ int IntType::multiply( int lhs, int rhs )
     
 int IntType::divide( int lhs, int rhs )
 {
-    if(lhs == 0) 
-    {
-        cout << "\nwatch out when dividing with zero! especially when using int. returned zero\n" << endl;
-        return 0;
-    }
-    else if(rhs == 0)
+    if(rhs == 0) 
     {
         cout << "\nwatch out when dividing with zero! especially when using int. returned zero\n" << endl;
         return 0;
@@ -175,7 +162,7 @@ int main()
     cout << "result of fr.subtract: " << resultSubst << endl;
 
     IntType it;
-    it.divide(1, 0);
+    it.divide(0, 1);
 
     std::cout << "good to go!" << std::endl;
 }
