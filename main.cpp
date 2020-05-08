@@ -490,6 +490,9 @@ IntType& IntType::divide(const IntType& it)
 int main()
 {
     IntType it(3);
+
+    std::cout << "here is a crash for you: " << *it.divide(0).ownedInt << "\n";
+
     FloatType ft(3.1f);
     DoubleType dt(3.63456);
     
@@ -519,4 +522,6 @@ int main()
     std::cout << "it value after chain with UDT inputs: " << *ft.ownedFloat << std::endl;
 
     std::cout << "good to go!" << std::endl;
+
+
 }
