@@ -189,6 +189,7 @@ struct IntType
     if (value == 0.f)
     {
         std::cout << "watch out when dividing with zero!\n" << std::endl;
+        return *this;
     }
 
     *ownedFloat /= value;
@@ -225,7 +226,7 @@ struct IntType
 
  FloatType& FloatType::add( const DoubleType& dt )
  {
-     return add(*dt.ownedDouble);
+     return add((float)*dt.ownedDouble);
  }
  
  FloatType& FloatType::subtract( const DoubleType& dt )
@@ -297,7 +298,8 @@ struct IntType
  {
      if (value == 0.)
      {
-         std::cout << "watch out when dividing with zero!\n" << std::endl;
+        std::cout << "watch out when dividing with zero!\n" << std::endl;
+        return *this;
      }
  
      *ownedDouble /= value;
@@ -408,9 +410,11 @@ IntType& IntType::divide( int value )
     if(value == 0)
     {
         std::cout << "\nwatch out when dividing with zero! especially when using int. returned zero\n" << std::endl;
+        return *this;
     }
     *ownedInt /= value;
     return *this;
+    
 }
 //=============================================================
 // 2
@@ -495,6 +499,11 @@ int main()
 
     FloatType ft(3.1f);
     DoubleType dt(3.63456);
+
+    //testing division
+    *ft.divide(0).ownedFloat;
+    *dt.divide(0).ownedDouble;
+
     
     // modify ownedNumericType
     std::cout << "it value: " << *it.ownedInt << std::endl;
@@ -525,3 +534,5 @@ int main()
 
 
 }
+
+// this is just some test change... cause I cant commit on repl.it :/
