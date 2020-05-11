@@ -166,26 +166,26 @@ struct IntType
 // FLOAT TYPE
  //=============================================================
  
- FloatType& FloatType::add( float value )
- {
+FloatType& FloatType::add( float value )
+{
     *ownedFloat += value;
     return *this;
- }
- 
- FloatType& FloatType::subtract( float value )
- {
+}
+
+FloatType& FloatType::subtract( float value )
+{
     *ownedFloat -= value;
     return *this;
- }
- 
- FloatType& FloatType::multiply( float value )
- {
+}
+
+FloatType& FloatType::multiply( float value )
+{
     *ownedFloat *= value;
     return *this;
- }
- 
- FloatType& FloatType::divide( float value )
- {
+}
+
+FloatType& FloatType::divide( float value )
+{
     if (value == 0.f)
     {
         std::cout << "watch out when dividing with zero!\n" << std::endl;
@@ -194,79 +194,79 @@ struct IntType
 
     *ownedFloat /= value;
     return *this;
- }
+}
 
   //=============================================================
   // 2
  //=============================================================
 
- FloatType& FloatType::add( const FloatType& ft )
- {
-     return add(*ft.ownedFloat);
- }
- 
- FloatType& FloatType::subtract( const FloatType& ft )
- {
-     return subtract(*ft.ownedFloat);
- }
- 
- FloatType& FloatType::multiply( const FloatType& ft )
- {
-     return multiply(*ft.ownedFloat);
- }
- 
- FloatType& FloatType::divide( const FloatType& ft )
- {
-     return divide(*ft.ownedFloat); // divide checks for 0
- }
+FloatType& FloatType::add( const FloatType& ft )
+{
+    return add(*ft.ownedFloat);
+}
+
+FloatType& FloatType::subtract( const FloatType& ft )
+{
+    return subtract(*ft.ownedFloat);
+}
+
+FloatType& FloatType::multiply( const FloatType& ft )
+{
+    return multiply(*ft.ownedFloat);
+}
+
+FloatType& FloatType::divide( const FloatType& ft )
+{
+    return divide(*ft.ownedFloat); // divide checks for 0
+}
 
   //=============================================================
   // 3
  //=============================================================
 
- FloatType& FloatType::add( const DoubleType& dt )
- {
-     return add((float)*dt.ownedDouble);
- }
- 
- FloatType& FloatType::subtract( const DoubleType& dt )
- {
-     return subtract(*dt.ownedDouble);
- }
- 
- FloatType& FloatType::multiply( const DoubleType& dt )
- {
-     return multiply(*dt.ownedDouble);
- }
- 
- FloatType& FloatType::divide( const DoubleType& dt )
- {
-     return divide(*dt.ownedDouble); // divide checks for 0
- }
+FloatType& FloatType::add( const DoubleType& dt )
+{
+    return add((float)*dt.ownedDouble);
+}
 
-  //=============================================================
-  // 4
- //=============================================================
- 
- FloatType& FloatType::add( const IntType& it )
- {
-     return add(*it.ownedInt);
- }
- 
- FloatType& FloatType::subtract( const IntType& it )
- {
-     return subtract(*it.ownedInt);
- }
- 
- FloatType& FloatType::multiply( const IntType& it )
- {
-     return multiply(*it.ownedInt);
- }
- 
- FloatType& FloatType::divide( const IntType& it )
- {
-     return divide(*it.ownedInt); // divide checks for 0
- }
+FloatType& FloatType::subtract( const DoubleType& dt )
+{
+    return subtract(*dt.ownedDouble);
+}
+
+FloatType& FloatType::multiply( const DoubleType& dt )
+{
+    return multiply(*dt.ownedDouble);
+}
+
+FloatType& FloatType::divide( const DoubleType& dt )
+{
+    return divide(*dt.ownedDouble); // divide checks for 0
+}
+
+//=============================================================
+// 4
+//=============================================================
+
+FloatType& FloatType::add( const IntType& it )
+{
+    return add(*it.ownedInt);
+}
+
+FloatType& FloatType::subtract( const IntType& it )
+{
+    return subtract(*it.ownedInt);
+}
+
+FloatType& FloatType::multiply( const IntType& it )
+{
+    return multiply(*it.ownedInt);
+}
+
+FloatType& FloatType::divide( const IntType& it )
+{
+    return divide(*it.ownedInt); // divide checks for 0
+}
 
  //=============================================================
  //=============================================================
@@ -276,109 +276,109 @@ struct IntType
 //=============================================================
 // 1
 //=============================================================
- DoubleType& DoubleType::add( double value )
- {
-     *ownedDouble += value;
-     return *this;
- }
- 
- DoubleType& DoubleType::subtract( double value )
- {
-     *ownedDouble -= value;
-     return *this;
- }
- 
- DoubleType& DoubleType::multiply( double value )
- {
-     *ownedDouble *= value;
-     return *this;
- }
- 
- DoubleType& DoubleType::divide( double value )
- {
-     if (value == 0.)
-     {
-        std::cout << "watch out when dividing with zero!\n" << std::endl;
-        return *this;
-     }
- 
-     *ownedDouble /= value;
-     return *this;
- }
+DoubleType& DoubleType::add( double value )
+{
+    *ownedDouble += value;
+    return *this;
+}
+
+DoubleType& DoubleType::subtract( double value )
+{
+    *ownedDouble -= value;
+    return *this;
+}
+
+DoubleType& DoubleType::multiply( double value )
+{
+    *ownedDouble *= value;
+    return *this;
+}
+
+DoubleType& DoubleType::divide( double value )
+{
+    if (value == 0.)
+    {
+    std::cout << "watch out when dividing with zero!\n" << std::endl;
+    return *this;
+    }
+
+    *ownedDouble /= value;
+    return *this;
+}
 
 //=============================================================
 // 2
 //=============================================================
 
- DoubleType& DoubleType::add( const IntType& it )
- {
-     return add(*it.ownedInt);
- }
- 
- DoubleType& DoubleType::subtract( const IntType& it )
- {
-     return subtract(*it.ownedInt);
- }
- 
- DoubleType& DoubleType::multiply( const IntType& it )
- {
-     return multiply(*it.ownedInt);
- }
- 
- DoubleType& DoubleType::divide( const IntType& it )
- {
-     return divide(*it.ownedInt); // divide checks for 0
- }
+DoubleType& DoubleType::add( const IntType& it )
+{
+    return add(*it.ownedInt);
+}
+
+DoubleType& DoubleType::subtract( const IntType& it )
+{
+    return subtract(*it.ownedInt);
+}
+
+DoubleType& DoubleType::multiply( const IntType& it )
+{
+    return multiply(*it.ownedInt);
+}
+
+DoubleType& DoubleType::divide( const IntType& it )
+{
+    return divide(*it.ownedInt); // divide checks for 0
+}
 
 
 
 //=============================================================
 // 3
 //=============================================================
- DoubleType& DoubleType::add( const DoubleType& dt )
- {
-     return add(*dt.ownedDouble);
- }
- 
- DoubleType& DoubleType::subtract( const DoubleType& dt )
- {
-     return subtract(*dt.ownedDouble);
- }
- 
- DoubleType& DoubleType::multiply( const DoubleType& dt )
- {
-     return multiply(*dt.ownedDouble);
- }
- 
- DoubleType& DoubleType::divide( const DoubleType& dt )
- {
-     return divide(*dt.ownedDouble); // divide checks for 0
- }
+DoubleType& DoubleType::add( const DoubleType& dt )
+{
+    return add(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::subtract( const DoubleType& dt )
+{
+    return subtract(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::multiply( const DoubleType& dt )
+{
+    return multiply(*dt.ownedDouble);
+}
+
+DoubleType& DoubleType::divide( const DoubleType& dt )
+{
+    return divide(*dt.ownedDouble); // divide checks for 0
+}
 
 
 //=============================================================
 // 4
 //=============================================================
 
- DoubleType& DoubleType::add( const FloatType& ft )
- {
-     return add(*ft.ownedFloat);
- }
- 
- DoubleType& DoubleType::subtract( const FloatType& ft )
- {
-     return subtract(*ft.ownedFloat);
- }
- 
- DoubleType& DoubleType::multiply( const FloatType& ft )
- {
-     return multiply(*ft.ownedFloat);
- }
- 
- DoubleType& DoubleType::divide( const FloatType& ft )
- {
-     return divide(*ft.ownedFloat); // divide checks for 0
- }
+DoubleType& DoubleType::add( const FloatType& ft )
+{
+    return add(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::subtract( const FloatType& ft )
+{
+    return subtract(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::multiply( const FloatType& ft )
+{
+    return multiply(*ft.ownedFloat);
+}
+
+DoubleType& DoubleType::divide( const FloatType& ft )
+{
+    return divide(*ft.ownedFloat); // divide checks for 0
+}
 
 //=============================================================
 //=============================================================
@@ -534,5 +534,3 @@ int main()
 
 
 }
-
-// this is just some test change... cause I cant commit on repl.it :/
