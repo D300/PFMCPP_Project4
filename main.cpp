@@ -495,14 +495,14 @@ int main()
 {
     IntType it(3);
 
-    std::cout << "here is a crash for you: " << *it.divide(0).ownedInt << "\n";
+    std::cout << "no crash anymore: " << *it.divide(0).ownedInt << "\n";
 
     FloatType ft(3.1f);
     DoubleType dt(3.63456);
 
     //testing division
-    *ft.divide(0).ownedFloat;
-    *dt.divide(0).ownedDouble;
+    std::cout << "division float: " << *ft.divide(0).ownedFloat << std::endl;
+    std::cout << "division double: " << *dt.divide(0).ownedDouble << std::endl;
 
     
     // modify ownedNumericType
