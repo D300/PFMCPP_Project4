@@ -226,7 +226,7 @@ FloatType& FloatType::divide( const FloatType& ft )
 
 FloatType& FloatType::add( const DoubleType& dt )
 {
-    return add((float)*dt.ownedDouble);
+    return add(static_cast<float>(*dt.ownedDouble));
 }
 
 FloatType& FloatType::subtract( const DoubleType& dt )
@@ -410,11 +410,12 @@ IntType& IntType::divide( int value )
     if(value == 0)
     {
         std::cout << "\nwatch out when dividing with zero! especially when using int. returned zero\n" << std::endl;
-        return *this;
     }
-    *ownedInt /= value;
+    else
+    {
+        *ownedInt /= value;
+    }
     return *this;
-    
 }
 //=============================================================
 // 2
