@@ -189,7 +189,6 @@ FloatType& FloatType::divide( float value )
     if (value == 0.f)
     {
         std::cout << "watch out when dividing with zero!\n" << std::endl;
-        return *this;
     }
 
     *ownedFloat /= value;
@@ -298,11 +297,13 @@ DoubleType& DoubleType::divide( double value )
 {
     if (value == 0.)
     {
-    std::cout << "watch out when dividing with zero!\n" << std::endl;
-    return *this;
+        std::cout << "watch out when dividing with zero!\n" << std::endl;
     }
-
-    *ownedDouble /= value;
+    else
+    {
+        *ownedDouble /= value;
+    }
+    
     return *this;
 }
 
@@ -502,7 +503,7 @@ int main()
     DoubleType dt(3.63456);
 
     //testing division
-    std::cout << "division float: " << *ft.divide(0).ownedFloat << std::endl;
+    std::cout << "division float: " << *ft.divide(0.f).ownedFloat << std::endl;
     std::cout << "division double: " << *dt.divide(0).ownedDouble << std::endl;
 
     
@@ -532,6 +533,4 @@ int main()
     std::cout << "it value after chain with UDT inputs: " << *ft.ownedFloat << std::endl;
 
     std::cout << "good to go!" << std::endl;
-
-
 }
