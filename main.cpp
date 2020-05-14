@@ -299,11 +299,8 @@ DoubleType& DoubleType::divide( double value )
     {
         std::cout << "watch out when dividing with zero!\n" << std::endl;
     }
-    else
-    {
-        *ownedDouble /= value;
-    }
     
+    *ownedDouble /= value;
     return *this;
 }
 
