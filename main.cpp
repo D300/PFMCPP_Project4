@@ -202,17 +202,17 @@ FloatType& FloatType::add( const DoubleType& dt )
 
 FloatType& FloatType::subtract( const DoubleType& dt )
 {
-    return subtract(*dt.ownedDouble);
+    return subtract(static_cast<float>(*dt.ownedDouble));
 }
 
 FloatType& FloatType::multiply( const DoubleType& dt )
 {
-    return multiply(*dt.ownedDouble);
+    return multiply(static_cast<float>(*dt.ownedDouble));
 }
 
 FloatType& FloatType::divide( const DoubleType& dt )
 {
-    return divide(*dt.ownedDouble); // divide checks for 0
+    return divide(static_cast<float>(*dt.ownedDouble)); // divide checks for 0
 }
 
 //=============================================================
@@ -332,22 +332,22 @@ DoubleType& DoubleType::divide( const DoubleType& dt )
 
 DoubleType& DoubleType::add( const FloatType& ft )
 {
-    return add(*ft.ownedFloat);
+    return add(static_cast<double>(*ft.ownedFloat));
 }
 
 DoubleType& DoubleType::subtract( const FloatType& ft )
 {
-    return subtract(*ft.ownedFloat);
+    return subtract(static_cast<double>(*ft.ownedFloat));
 }
 
 DoubleType& DoubleType::multiply( const FloatType& ft )
 {
-    return multiply(*ft.ownedFloat);
+    return multiply(static_cast<double>(*ft.ownedFloat));
 }
 
 DoubleType& DoubleType::divide( const FloatType& ft )
 {
-    return divide(*ft.ownedFloat); // divide checks for 0
+    return divide(static_cast<double>(*ft.ownedFloat)); // divide checks for 0
 }
 
 //=============================================================
@@ -393,22 +393,22 @@ IntType& IntType::divide( int value )
 
 IntType& IntType::add(const FloatType& value)
 {
-    return add(*value.ownedFloat);
+    return add(static_cast<int>(*value.ownedFloat));
 }
 
 IntType& IntType::subtract(const FloatType& value)
 {
-    return subtract(*value.ownedFloat);
+    return subtract(static_cast<int>(*value.ownedFloat));
 }
 
 IntType& IntType::multiply(const FloatType& value)
 {
-    return multiply(*value.ownedFloat);
+    return multiply(static_cast<int>(*value.ownedFloat));
 }
 
 IntType& IntType::divide(const FloatType& value)
 {
-    return divide(*value.ownedFloat);
+    return divide(static_cast<int>(*value.ownedFloat));
 }
 
 //=============================================================
@@ -417,22 +417,22 @@ IntType& IntType::divide(const FloatType& value)
 
 IntType& IntType::add(const DoubleType& value)
 {
-    return add(*value.ownedDouble);
+    return add(static_cast<int>(*value.ownedDouble));
 }
 
 IntType& IntType::subtract(const DoubleType& value)
 {
-    return subtract(*value.ownedDouble);
+    return subtract(static_cast<int>(*value.ownedDouble));
 }
 
 IntType& IntType::multiply(const DoubleType& value)
 {
-    return multiply(*value.ownedDouble);
+    return multiply(static_cast<int>(*value.ownedDouble));
 }
 
 IntType& IntType::divide(const DoubleType& value)
 {
-    return divide(*value.ownedDouble);
+    return divide(static_cast<int>(*value.ownedDouble));
 }
 
 
@@ -497,7 +497,7 @@ int main()
      */
     
     it.add(ft).subtract(dt).multiply(dt);
-    ft.divide(0.0001);
+    ft.divide(static_cast<float>(0.0001));
     std::cout << "it value after chain with UDT inputs: " << *it.ownedInt << std::endl;
     std::cout << "it value after chain with UDT inputs: " << *ft.ownedFloat << std::endl;
 
