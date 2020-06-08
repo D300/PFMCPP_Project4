@@ -10,11 +10,11 @@
     Build/Run often with this task to make sure you're not breaking the code with each step.
     I recommend committing after you get each step working so you can revert to a working version easily if needed.
 
- 1) remove your functions that accepted a User-Defined Type
+ 1) remove your functions that accepted a User-Defined Type - x
  
- 2) remove any getValue() functions if you added them
+ 2) remove any getValue() functions if you added them - x
  
- 3) move all of your add/subtract/multiply/divide implementations out of the class.
+ 3) move all of your add/subtract/multiply/divide implementations out of the class. - x
   
  4) add user-defined conversion functions that convert to the numeric type your object holds.
         i.e. if your type holds an int, you'll need an operator int() function.
@@ -36,26 +36,18 @@
 
  */
 
-void part3()
-{
-    FloatType ft( 5.5f );
-    DoubleType dt( 11.1 );
-    IntType it ( 34 );
-    DoubleType pi( 3.14 );
-
-    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
-    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
-    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( pi ).multiply( dt ).subtract( ft ) << std::endl;
-    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
-    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0) << std::endl;
-    
-    std::cout << "FloatType x IntType  =  " << it.multiply( ft ) << std::endl;
-    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( dt ).add( ft ).multiply( 24 ) << std::endl;
-}
 
 #include <iostream>
 
 //============================================================
+struct A {};
+struct HeapA
+{
+    A* a;
+    HeapA(A* a_) : a(a_) { }
+    ~HeapA() { delete a; }
+};
+
 
 struct IntType;
 struct DoubleType;
@@ -90,7 +82,7 @@ struct DoubleType
         ownedDouble = nullptr;
     }
 
-    operator double() { std::cout << "dt_op" << std::endl; return *ownedDouble; } 
+    operator double() { return *ownedDouble; } 
 
     DoubleType& add( double value );
     DoubleType& subtract( double value );
@@ -126,32 +118,32 @@ private:
 // FLOAT TYPE
  //=============================================================
  
-FloatType& FloatType::add( float value )
+FloatType& FloatType::add( float value_ )
 {
-    *ownedFloat += value;
+    *ownedFloat += value_;
     return *this;
 }
 
-FloatType& FloatType::subtract( float value )
+FloatType& FloatType::subtract( float value_ )
 {
-    *ownedFloat -= value;
+    *ownedFloat -= value_;
     return *this;
 }
 
-FloatType& FloatType::multiply( float value )
+FloatType& FloatType::multiply( float value_ )
 {
-    *ownedFloat *= value;
+    *ownedFloat *= value_;
     return *this;
 }
 
-FloatType& FloatType::divide( float value )
+FloatType& FloatType::divide( float value_ )
 {
-    if (value == 0.f)
+    if (value_ == 0.f)
     {
         std::cout << "watch out when dividing with zero!\n" << std::endl;
     }
 
-    *ownedFloat /= value;
+    *ownedFloat /= value_;
     return *this;
 }
 //=============================================================
@@ -185,8 +177,6 @@ DoubleType& DoubleType::divide( double value )
     *ownedDouble /= value;
     return *this;
 }
-//=============================================================
-//=============================================================
 
 //=============================================================
 // 1
@@ -229,18 +219,20 @@ IntType& IntType::divide( int value )
 int main()
 {   
     //testing instruction 0
-    HeapA heapA; 
+    A a;
+    HeapA heapA(&a); 
 
     //assign heap primitives
     FloatType ft ( 2.0f );
     DoubleType dt ( 2 );
     IntType it ( 2 ) ;
 
-    std::cout << "FloatType add result=" << ft.add( 2.0f ).value << std::endl;
-    std::cout << "FloatType subtract result=" << ft.subtract( 2.0f ).value << std::endl;
-    std::cout << "FloatType multiply result=" << ft.multiply( 2.0f ).value << std::endl;
-    std::cout << "FloatType divide result=" << ft.divide( 16.0f).value << std::endl << std::endl;
+    std::cout << "FloatType add result=" << ft.add(static_cast<int>(ft)) << std::endl;
+    std::cout << "FloatType subtract result=" << ft.subtract(static_cast<int>(dt)) << std::endl;
+    std::cout << "FloatType multiply result=" << ft.multiply(static_cast<int>(ft)) << std::endl;
+    std::cout << "FloatType divide result=" << ft.divide(static_cast<float>(static_cast<float>(ft)*static_cast<float>(ft))) << std::endl << std::endl;
 
+    /*
     std::cout << "DoubleType add result=" << dt.add(2.0).value << std::endl;
     std::cout << "DoubleType subtract result=" << dt.subtract(2.0).value << std::endl;
     std::cout << "DoubleType multiply result=" << dt.multiply(2.0).value << std::endl;
@@ -277,7 +269,23 @@ int main()
 
     std::cout << "---------------------\n" << std::endl; 
 
+    FloatType ft( 5.5f );
+    DoubleType dt( 11.1 );
+    IntType it ( 34 );
+    DoubleType pi( 3.14 );
+
+    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
+    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
+    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( pi ).multiply( dt ).subtract( ft ) << std::endl;
+    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
+    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0) << std::endl;
+    
+    std::cout << "FloatType x IntType  =  " << it.multiply( ft ) << std::endl;
+    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( dt ).add( ft ).multiply( 24 ) << std::endl;
+
+
     std::cout << "good to go!\n";
+    */
 
     return 0;
 }
