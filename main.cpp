@@ -47,6 +47,7 @@ struct HeapA
     HeapA(A* a_) : a(a_) { }
     ~HeapA() 
     { 
+        delete a;
         a = nullptr; 
     }
 };
