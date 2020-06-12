@@ -144,7 +144,7 @@ FloatType& FloatType::divide( float value_ )
 {
     if (value_ == 0.f)
     {
-        std::cout << "error: float division by zero is an error and will crash the program!" << std::endl;
+        std::cout << "error: float division by zero" << std::endl;
     }
 
     *ownedFloat /= value_;
@@ -175,7 +175,7 @@ DoubleType& DoubleType::divide( double value )
 {
     if (value == 0.)
     {
-        std::cout << "error: double division by zero is an error and will crash the program!" << std::endl;
+        std::cout << "error: double division by zero" << std::endl;
     }
     
     *ownedDouble /= value;
@@ -230,7 +230,7 @@ void part3()
     std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( static_cast<double>(3) ).add( static_cast<int>(it) ) << std::endl;
     std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
     std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
-    std::cout << it.multiply( static_cast<int>(it) ).divide(0).divide( static_cast<int>(0.0f) ).divide( static_cast<int>(0.0) ) <<std::endl;
+    std::cout << it.multiply( static_cast<int>(it) ).divide(0).divide( static_cast<int>(0.f) ).divide( static_cast<int>(0.0) ) << std::endl;
     
     std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) )<< std::endl;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
@@ -258,7 +258,6 @@ int main()
     std::cout << "DoubleType subtract result=" << dt.subtract(static_cast<double>(it)) << std::endl;
     std::cout << "DoubleType multiply result=" << dt.multiply(static_cast<double>(dt)) << std::endl;
     std::cout << "DoubleType divide result=" << dt.divide(static_cast<double>(5.0f)) << std::endl << std::endl;
-
     
     std::cout << "IntType add result=" << ( it.add(2) ) << std::endl;
     std::cout << "IntType subtract result=" << ( it.subtract(2) ) << std::endl;
