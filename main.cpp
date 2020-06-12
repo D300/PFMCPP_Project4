@@ -144,7 +144,7 @@ FloatType& FloatType::divide( float value_ )
 {
     if (value_ == 0.f)
     {
-        std::cout << "error: float division by zero" << std::endl;
+        std::cout << "warning: floating point division by zero!" << std::endl;
     }
 
     *ownedFloat /= value_;
@@ -175,7 +175,7 @@ DoubleType& DoubleType::divide( double value )
 {
     if (value == 0.)
     {
-        std::cout << "error: double division by zero" << std::endl;
+        std::cout << "warning: floating point division by zero!" << std::endl;
     }
     
     *ownedDouble /= value;
