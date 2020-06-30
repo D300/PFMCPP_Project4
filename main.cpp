@@ -175,14 +175,13 @@ struct HeapA
 };
 
 
-struct IntType;
-struct DoubleType;
+
 
 /*
-1) add pow() functions, and a powInternal() function to each of your UDTs
-     a) your pow() functions should call powInternal()
-     b) add a pow() whose argument type is the primitive your UDT owns.  the argument should be passed by copy.
-     c) for each UDT in the file, your class should have pow() overloads that take that UDT as the function argument.
+1) add pow() functions, and a powInternal() function to each of your UDTs x
+     a) your pow() functions should call powInternal() x
+     b) add a pow() whose argument type is the primitive your UDT owns.  the argument should be passed by copy. x
+     c) for each UDT in the file, your class should have pow() overloads that take that UDT as the function argument. x
          the argument should be passed as const ref
          i.e. if you had UDTs named IntType, FloatType, DoubleType
              in your IntType class, you'd have:
@@ -203,6 +202,9 @@ struct DoubleType;
          powInternal() should be chainable.
 */
 
+struct IntType;
+struct DoubleType;
+
 struct FloatType
 { 
     FloatType(float ownedType_) : ownedFloat(new float (ownedType_)) { }
@@ -217,10 +219,11 @@ struct FloatType
     FloatType& multiply( float value );
     FloatType& divide( float value );
 
+    FloatType& pow(float f);
+
     FloatType& pow(const IntType& it);
     FloatType& pow(const FloatType& ft);
     FloatType& pow(const DoubleType& dt);
-    FloatType& pow(float f);
 
     operator float() const { return *ownedFloat; }
 
@@ -268,11 +271,12 @@ FloatType& FloatType::divide( float value_ )
 }
 
 // FloatType Pow Funcions
+
 FloatType& FloatType::pow(const IntType& it)       { return powInternal( static_cast<float>(it) ); }
 
-FloatType& FloatType::pow(const FloatType& ft)     { return powInternal( static_cast<float>(ft) ); }
+FloatType& FloatType::pow(const FloatType ft)     { return powInternal( static_cast<float>(ft) ); }
 
-FloatType& FloatType::pow(const DoubleType& dt)    { return powInternal( static_cast<float>(dt) ); }
+FloatType& FloatType::pow(const DoubleType dt)    { return powInternal( static_cast<float>(dt) ); }
 
 FloatType& FloatType::pow(float f)                 { return powInternal( f ); }
 
