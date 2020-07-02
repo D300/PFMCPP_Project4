@@ -174,34 +174,6 @@ struct HeapA
     }
 };
 
-
-
-
-/*
-1) add pow() functions, and a powInternal() function to each of your UDTs x
-     a) your pow() functions should call powInternal() x
-     b) add a pow() whose argument type is the primitive your UDT owns.  the argument should be passed by copy. x
-     c) for each UDT in the file, your class should have pow() overloads that take that UDT as the function argument. x
-         the argument should be passed as const ref
-         i.e. if you had UDTs named IntType, FloatType, DoubleType
-             in your IntType class, you'd have:
-                 pow(const IntType&),
-                 pow(const FloatType&),
-                 pow(const DoubleType&),
-                 and pow(int)
-     d) be sure to remember the rules about what member functions can be called on const objects.
-             (const objects can only call their const member functions)
-     e) the pow() functions should be chainable.
- 
- 2) your powInternal() function should do something like this in its body:    *val = std::pow( *val, arg );
-         where 'arg' is the passed-in type, converted to whatever type your object is holding.
-             if your UDT owns an int, then arg would be an int.
-             if your UDT owns a float, then arg would be a float.
-         std::pow's documentation is found here: https://en.cppreference.com/w/cpp/numeric/math/pow so be sure to include
-             the proper header file listed there.
-         powInternal() should be chainable.
-*/
-
 struct IntType;
 struct DoubleType;
 
@@ -237,49 +209,6 @@ private:
     }
 };
 
-//=============================================================
-// FLOAT TYPE
- //=============================================================
- 
-FloatType& FloatType::add( float value_ )
-{
-    *ownedFloat += value_;
-    return *this;
-}
-
-FloatType& FloatType::subtract( float value_ )
-{
-    *ownedFloat -= value_;
-    return *this;
-}
-
-FloatType& FloatType::multiply( float value_ )
-{
-    *ownedFloat *= value_;
-    return *this;
-}
-
-FloatType& FloatType::divide( float value_ )
-{
-    if (value_ == 0.f)
-    {
-        std::cout << "warning: floating point division by zero!" << std::endl;
-    }
-
-    *ownedFloat /= value_;
-    return *this;
-}
-
-// FloatType Pow Funcions
-
-FloatType& FloatType::pow(const IntType& it)       { return powInternal( static_cast<float>(it) ); }
-
-FloatType& FloatType::pow(const FloatType ft)     { return powInternal( static_cast<float>(ft) ); }
-
-FloatType& FloatType::pow(const DoubleType dt)    { return powInternal( static_cast<float>(dt) ); }
-
-FloatType& FloatType::pow(float f)                 { return powInternal( f ); }
-
 
 struct DoubleType
 {
@@ -290,8 +219,6 @@ struct DoubleType
         ownedDouble = nullptr;
     }
 
-    operator double() const { return *ownedDouble; } 
-
     DoubleType& add( double value );
     DoubleType& subtract( double value );
     DoubleType& multiply( double value );
@@ -301,6 +228,8 @@ struct DoubleType
     DoubleType& pow(const FloatType& ft);
     DoubleType& pow(const DoubleType& dt);
     DoubleType& pow(double f);
+
+    operator double() const { return *ownedDouble; }
 
 private:
     double* ownedDouble;
@@ -339,10 +268,102 @@ private:
 
     IntType& powInternal(int arg)
     {
-        *ownedInt = std::pow(*ownedInt, arg);
+        *ownedInt = static_cast<int>(std::pow(*ownedInt, arg));
         return *this;
     }
 };
+
+struct Point
+{
+    Point(const IntType& x_, const IntType& y_);
+    Point(const FloatType& x_, const FloatType& y_);
+    Point(const DoubleType& x_, const DoubleType& y_);
+
+    Point& multiply(float m);
+    Point& multiply(const IntType& m);
+    Point& multiply(const FloatType& m);
+    Point& multiply(const DoubleType& m);
+    
+    void toString()
+    {
+        std::cout << "Point { x: " << x << ", y: " << y << " }\n";
+    }
+
+private:
+    float x{0}, y{0};
+};
+
+// Point ctors and multiply funcs
+Point::Point(const IntType& x_, const IntType& y_) : x( static_cast<float>(x_) ), y( static_cast<float>(y_) ) {}
+Point::Point(const FloatType& x_, const FloatType& y_) : x( static_cast<float>(x_) ), y(  static_cast<float>(y_) ) {}
+Point::Point(const DoubleType& x_, const DoubleType& y_) : x( static_cast<float>(x_) ), y(  static_cast<float>(y_) ) {}
+
+Point& Point::multiply(float m)
+{
+    x *= m;
+    y *= m;
+    return *this;
+}
+
+Point& Point::multiply(const IntType& m)
+{
+    return multiply( static_cast<float>(m) );
+}
+
+Point& Point::multiply(const FloatType& m)
+{
+    return multiply( static_cast<float>(m) );
+}
+
+Point& Point::multiply(const DoubleType& m)
+{
+    return multiply( static_cast<float>(m) );
+}
+
+//=============================================================
+// FLOAT TYPE
+//=============================================================
+
+// FloatType Pow Funcions
+// operators have to be defined!
+
+FloatType& FloatType::pow(const IntType& it)       { return powInternal( static_cast<float>(it) ); }
+
+FloatType& FloatType::pow(const FloatType& ft)     { return powInternal( static_cast<float>(ft) ); }
+
+FloatType& FloatType::pow(const DoubleType& dt)    { return powInternal( static_cast<float>(dt) ); }
+
+FloatType& FloatType::pow(float f)                 { return powInternal( f ); }
+
+ 
+FloatType& FloatType::add( float value_ )
+{
+    *ownedFloat += value_;
+    return *this;
+}
+
+FloatType& FloatType::subtract( float value_ )
+{
+    *ownedFloat -= value_;
+    return *this;
+}
+
+FloatType& FloatType::multiply( float value_ )
+{
+    *ownedFloat *= value_;
+    return *this;
+}
+
+FloatType& FloatType::divide( float value_ )
+{
+    if (value_ == 0.f)
+    {
+        std::cout << "warning: floating point division by zero!" << std::endl;
+    }
+
+    *ownedFloat /= value_;
+    return *this;
+}
 
 //=============================================================
 // 1
@@ -376,8 +397,14 @@ DoubleType& DoubleType::divide( double value )
     return *this;
 }
 
+// DoubleType Pow Funcions
+DoubleType& DoubleType::pow(const IntType& it)       { return powInternal( static_cast<double>(it) ); }
+DoubleType& DoubleType::pow(const FloatType& ft)     { return powInternal( static_cast<double>(ft) ); }
+DoubleType& DoubleType::pow(const DoubleType& dt)    { return powInternal( static_cast<double>(dt) ); }
+DoubleType& DoubleType::pow(double d)                { return powInternal( d ); }
+
 //=============================================================
-// 1
+// INTTYPE
 //=============================================================
 
 IntType& IntType::add(int value)
@@ -411,6 +438,12 @@ IntType& IntType::divide( int value )
     return *this;
 }
 
+// IntType Pow Funcions
+IntType& IntType::pow(const IntType& it)       { return powInternal( static_cast<int>(it) ); }
+IntType& IntType::pow(const FloatType& ft)     { return powInternal( static_cast<int>(ft) ); }
+IntType& IntType::pow(const DoubleType& dt)    { return powInternal( static_cast<int>(dt) ); }
+IntType& IntType::pow(int i)                   { return powInternal( i ); }
+
 //=============================================================
 
 void part3()
@@ -429,19 +462,6 @@ void part3()
     std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) )<< std::endl;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
 }
-
-
-struct Point
-{
-    Point& multiply(float m)
-    {
-        x *= m;
-        y *= m;
-        return *this;
-    }
-private:
-    float x{0}, y{0};
-};
 
 void part4()
 {
@@ -493,12 +513,13 @@ void part4()
     // Point tests with float
     std::cout << "Point tests with float argument:" << std::endl;
     Point p0(ft2, floatMul);
-    p0.toString();   
+    p0.toString();  
     std::cout << "Multiplication factor: " << floatMul << std::endl;
     p0.multiply(floatMul); 
     p0.toString();   
     std::cout << "---------------------\n" << std::endl;
 
+    
     // Point tests with FloatType
     std::cout << "Point tests with FloatType argument:" << std::endl;
     Point p1(ft2, ft2);
