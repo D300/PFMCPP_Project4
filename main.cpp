@@ -351,10 +351,7 @@ FloatType& FloatType::operator*=( float value_ )
 FloatType& FloatType::operator/=( float value_ )
 {
     if (value_ == 0.f)
-    {
         std::cout << "warning: floating point division by zero!" << std::endl;
-    }
-
     *ownedFloat /= value_;
     return *this;
 }
@@ -424,11 +421,9 @@ IntType& IntType::operator/=( int value )
     if(value == 0)
     {
         std::cout << "error: integer division by zero is an error and will crash the program!" << std::endl;
+        return *this;
     }
-    else
-    {
-        *ownedInt /= value;
-    }
+    *ownedInt /= value;
     return *this;
 }
 
@@ -584,22 +579,43 @@ int main()
     DoubleType dt ( 2.0 );
     IntType it ( 2 ) ;
 
-    std::cout << "FloatType add result=" << (ft += ft) << std::endl;
-    std::cout << "FloatType subtract result=" << (ft -= static_cast<float>(dt)) << std::endl;
-    std::cout << "FloatType multiply result=" << (ft *= ft) << std::endl;
-    std::cout << "FloatType divide result=" << (ft /= 16.0f) << std::endl << std::endl;
+    ft += ft;
+    std::cout << "FloatType add result=" << ft << std::endl;
+    
+    ft -= static_cast<float>(dt);
+    std::cout << "FloatType subtract result=" << ft << std::endl;
+    
+    ft *= ft;
+    std::cout << "FloatType multiply result=" << ft << std::endl;
+    
+    ft /= 16.0f;
+    std::cout << "FloatType divide result=" << ft << std::endl << std::endl;
 
     
     // 4 2 4 0.8
-    std::cout << "DoubleType add result=" << (dt += (static_cast<double>(dt))) << std::endl;
-    std::cout << "DoubleType subtract result=" << (dt -= (static_cast<double>(it))) << std::endl;
-    std::cout << "DoubleType multiply result=" << (dt *= (static_cast<double>(dt))) << std::endl;
-    std::cout << "DoubleType divide result=" << ( dt /= (static_cast<double>(5.0f))) << std::endl << std::endl;
+    dt += dt;
+    std::cout << "DoubleType add result=" << dt << std::endl;
     
-    std::cout << "IntType add result=" << ( it += (2) ) << std::endl;
-    std::cout << "IntType subtract result=" << ( it -= (2) ) << std::endl;
-    std::cout << "IntType multiply result=" << ( it *= (2) ) << std::endl;
-    std::cout << "IntType divide result=" << ( it /= (3) ) << std::endl << std::endl;
+    dt -= it;
+    std::cout << "DoubleType subtract result=" << dt << std::endl;
+    
+    dt *= dt;
+    std::cout << "DoubleType multiply result=" << dt << std::endl;
+    
+    dt /= static_cast<double>(5.0f);
+    std::cout << "DoubleType divide result=" << dt << std::endl << std::endl;
+    
+    it += 2;
+    std::cout << "IntType add result=" << it << std::endl;
+
+    it -= 2;
+    std::cout << "IntType subtract result=" << it << std::endl;
+
+    it *= 2;
+    std::cout << "IntType multiply result=" << it << std::endl;
+
+    it /= 3;
+    std::cout << "IntType divide result=" << it << std::endl << std::endl;
 
     it *= 1000; 
     it /= 2;
@@ -628,8 +644,8 @@ int main()
     std::cout << "Use of function concatenation (mixed type arguments) " << std::endl;
 
     dt *= (it);
-    dt /= (5.0f);
-    dt += ft; 
+    dt /= static_cast<double>(5.0f);
+    dt += static_cast<double>(ft); 
     
     std::cout << "New value of dt = (dt * it) / 5.0f + ft = " << dt << std::endl;
 
@@ -639,9 +655,19 @@ int main()
     // Intercept division by 0
     // --------
     std::cout << "Intercept division by 0 " << std::endl;
-    std::cout << "New value of it = it / 0 = " << ( it /= (0) ) << std::endl;
-    std::cout << "New value of ft = ft / 0 = " << ( ft /= (0) ) << std::endl;
-    std::cout << "New value of dt = dt / 0 = " << ( dt /= (0) ) << std::endl;
+
+    std::cout << "New value of it = it / 0 = ";
+    it /= 0;
+    std::cout << it << std::endl;
+
+
+    std::cout << "New value of ft = ft / 0 = ";
+    ft /= 0;
+    std::cout << ft << std::endl;
+
+    std::cout << "New value of dt = dt / 0 = ";
+    dt /= 0; 
+    std::cout << dt << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
 
