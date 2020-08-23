@@ -220,7 +220,6 @@ struct FloatType
     }
 
 
-
     FloatType& apply( std::function<FloatType&(float&)> f) 
     { 
         if ( f )
@@ -241,10 +240,7 @@ private:
     float* ownedFloat;   
 };
 
-void myFloatFreeFunct(float& value)
-{
-    value += 7.0f;
-}
+
 
 
 struct DoubleType
@@ -294,11 +290,6 @@ private:
     double* ownedDouble;
 };
 
-void myDoubleFreeFunct(double& value)
-{
-    value += 6.0;
-}
-
 struct IntType
 {
     IntType(int intVal) : ownedInt(new int(intVal)) { }
@@ -345,6 +336,20 @@ struct IntType
 private:
     int* ownedInt; 
 };
+
+//========================================================
+// FREE FUNCS
+//========================================================
+
+void myFloatFreeFunct(float& value)
+{
+    value += 7.0f;
+}
+
+void myDoubleFreeFunct(double& value)
+{
+    value += 6.0;
+}
 
 void myIntFreeFunct(int& value)
 {
