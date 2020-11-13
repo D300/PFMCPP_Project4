@@ -20,20 +20,23 @@ Templates and Containers
     replace your manual memory management techniques with a private std::unique_ptr member variable. X
 
 #2) replace your Heap-Allocated Numeric Type-owning classes with a single templated class called 'Numeric'.
-        replace all instances of your previous classes (IntType, etc) with this templated class.
+        replace all instances of your previous classes (IntType, etc) with this templated class. X
 
 #3) add a 'using Type = <your class template parameter>;' 
         treat this type declaration via 'using' as a static member variable
         use this Type alias as the argument everywhere you previously used the template argument.
         this will make it very easy to change the type if needed.
             i.e. if you have 'std::unique_ptr<NumericType> value;' before
-                you'd replace NumericType in that variable declaration with 'Type'
+                you'd replace NumericType in that variable declaration with 'Type' X
         
+
+
 #4) you'll need to pair it with decltype() to help the compiler figure out the type of the object 
     your class owns when you make your lambda and free function that takes your unique_ptr.  
     i.e. like this for determining the template parameter of the unique_ptr function argument to your class's apply() function
         std::unique_ptr< decltype( <instance of class> )::Type >
-    
+
+
 #5) template your free function for the apply() that takes a function pointer so it can be used with your Wrapper class's apply() function
 
 #6) add an explicit template specialization for 'double' of your wrapper class
@@ -223,11 +226,13 @@ private:
     A* a;
 };
 
-
+//=============================================================
+// #3 PRIMARY TEMPLATE
+//=============================================================
 template <typename NumericType>
 struct Numeric
 {
-    using Type = NumericType; // did this already
+    using Type = NumericType;
     
     Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { }
  
@@ -251,40 +256,47 @@ struct Numeric
         return *this;
     }
 
-    // CHECK
-
-    Numeric& operator /=( Type value )
+    
+    Numeric& operator/=(Type value)
     {
-        if (value == 0.f)
-        {
-            std::cout << "warning: floating point division by zero!" << std::endl;
-            *ownedType /= value;
-            return *this;
+        if (value == 0.0)
+        { 
+            std::cout << "this is not the final code!" << std::endl; 
         }
-        
-    }
 
+        *ownedType /= value;
+        return *this;
+    }
+    
+    // function
     Numeric& pow(Type f)
     {
         return powInteral(f);
     }
 
+    //==================================================================
+    //==================================================================
 
-    Numeric& apply( std::function<Numeric&(float&)> f) 
+    // callable
+    Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> freeFunc) 
     { 
-        if ( f )
+        if ( freeFunc )
             return f(*ownedType);
         
         return *this;
     }
 
-    Numeric& apply(void(*f)(float&)) 
+
+    Numeric& apply(void(*freeFunc)(std::unique_ptr<Type>&)) 
     {
-        if ( f )
+        if ( freeFunc )
             f(*ownedType);
 
         return *this;
     }
+
+    //==================================================================
+    //==================================================================
 
 private:
     std::unique_ptr<Type> ownedType; 
@@ -296,158 +308,17 @@ private:
     }
 };
 
-
-
-
-struct IntType;
-struct DoubleType;
-
-struct FloatType
-{ 
-    FloatType(float ownedType_) : ownedFloat ( std::make_unique<float>(ownedType_) ) { }
- 
-    operator float() const { return *ownedFloat; }
-
-    FloatType& operator +=( float value );
-    FloatType& operator -=( float value );
-    FloatType& operator *=( float value );
-    FloatType& operator /=( float value );
-
-    FloatType& pow(float f);
-    FloatType& pow(const IntType& it);
-    FloatType& pow(const FloatType& ft);
-    FloatType& pow(const DoubleType& dt);
-  
-    FloatType& powInternal(float arg)
-    {
-        *ownedFloat = std::pow(*ownedFloat, arg);
-        return *this;
-    }
-
-    FloatType& apply( std::function<FloatType&(float&)> f) 
-    { 
-        if ( f )
-            return f(*ownedFloat);
-        
-        return *this;
-    }
-
-    FloatType& apply(void(*f)(float&)) 
-    {
-        if ( f )
-            f(*ownedFloat);
-
-        return *this;
-    }
-
-private:
-    std::unique_ptr<float> ownedFloat;   
-};
-
-struct DoubleType
-{
-    DoubleType(double ownedType_) : ownedDouble ( std::make_unique<double>(ownedType_) ) { }
-
-    operator double() const { return *ownedDouble; }
-
-    DoubleType& operator+=( double value );
-    DoubleType& operator-=( double value );
-    DoubleType& operator*=( double value );
-    DoubleType& operator/=( double value );
-
-    DoubleType& pow(const IntType& it);
-    DoubleType& pow(const FloatType& ft);
-    DoubleType& pow(const DoubleType& dt);
-    DoubleType& pow(double f);
-
-    DoubleType& powInternal(double arg)
-    {
-        *ownedDouble = std::pow(*ownedDouble, arg);
-        return *this;
-    }
-
-    DoubleType& apply( std::function<DoubleType&(double&)> f )
-    {
-        if (f)
-            f(*ownedDouble);
-
-        return *this;
-    }
-
-    DoubleType& apply( void(* f)(double&) )
-    {
-        if (f)
-            f(*ownedDouble);
-        
-        return *this;
-    }
-
-private:
-    std::unique_ptr<double> ownedDouble;
-};
-
-struct IntType
-{
-    IntType(int ownedType_) : ownedInt(std::make_unique<int>(ownedType_)) { }
-    
-    operator int() const { return *ownedInt; }
-
-    IntType& operator+=(int value);
-    IntType& operator-=(int value);
-    IntType& operator*=( int value );
-    IntType& operator/=( int value );
-
-    IntType& pow(const IntType& it);
-    IntType& pow(const FloatType& ft);
-    IntType& pow(const DoubleType& dt);
-    IntType& pow(int f);
-
-    IntType& powInternal(int arg)
-    {
-        *ownedInt = static_cast<int>(std::pow(*ownedInt, arg));
-        return *this;
-    }
-
-    IntType& apply( std::function<IntType& (int&)> f)
-    {
-        if (f)
-            return f(*ownedInt);
-
-        return *this;
-    }
-
-    IntType& apply(void(* f)(int&) )
-    {
-        if (f)
-            f(*ownedInt);
-
-        return *this;
-    }
-
-private:
-    std::unique_ptr<int> ownedInt; 
-};
-
 //========================================================
-// FREE FUNCS
+// #5 FREE FUNCS
 //========================================================
-
-void myFloatFreeFunct(float& value)
+template <typename Type>
+void myNumericFreeFunct(std::unique_ptr<Type>& value)
 {
     value += 7.0f;
 }
 
-void myDoubleFreeFunct(double& value)
-{
-    value += 6.0;
-}
-
-void myIntFreeFunct(int& value)
-{
-    value += 5;
-}
-
-
+// why is commiting not working... this is a change... 
+// why is commiting not working... this is a change... 
 
 //=============================================================
 
@@ -772,7 +643,7 @@ int main()
 
     std::cout << "---------------------\n" << std::endl; 
     
-    
+/*   
     // Intercept division by 0
     // --------
     std::cout << "Intercept division by 0 " << std::endl;
@@ -780,7 +651,6 @@ int main()
     std::cout << "New value of it = it / 0 = ";
     it /= 0;
     std::cout << it << std::endl;
-
 
     std::cout << "New value of ft = ft / 0 = ";
     ft /= 0;
@@ -791,6 +661,8 @@ int main()
     std::cout << dt << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
+*/
+
 
     part3();
     // part4();
