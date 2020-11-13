@@ -271,7 +271,7 @@ struct Numeric
     // function
     Numeric& pow(Type f)
     {
-        return powInteral(f);
+        return powInternal(f);
     }
 
     //==================================================================
@@ -317,8 +317,75 @@ void myNumericFreeFunct(std::unique_ptr<Type>& value)
     value += 7.0f;
 }
 
-// why is commiting not working... this is a change... 
-// why is commiting not working... this is a change... 
+//=============================================================
+// #6 EXPLICIT TEMPLATE SPECIALIZATION 
+//=============================================================
+template <>
+struct Numeric<double>
+{
+    using Type = double;
+    
+    Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { }
+ 
+    operator Type() const { return *ownedType; }
+
+    Numeric& operator +=( Type value )
+    {
+        *ownedType += value;
+        return *this;
+    }
+
+    Numeric& operator -=( Type value )
+    {
+        *ownedType -= value;
+        return *this;
+    }
+
+    Numeric& operator *=( Type value )
+    {
+        *ownedType *= value;
+        return *this;
+    }
+
+    Numeric& operator/=(Type value)
+    {
+        if (value == 0.0)
+        { 
+            std::cout << "warning: floating point division by zero!" << std::endl; 
+        }
+
+        *ownedType /= value;
+        return *this;
+    }
+    
+    // function
+    Numeric& pow(Type f)
+    {
+        return powInternal(f);
+    }
+
+    //==================================================================
+    //==================================================================
+
+    template<typename Callable>
+    Numeric& apply( Callable callable_) 
+    { 
+        callable_(*ownedType);
+        return *this;
+    }
+
+    //==================================================================
+    //==================================================================
+
+private:
+    std::unique_ptr<Type> ownedType; 
+
+    Numeric& powInternal(float arg)
+    {
+        *ownedType = std::pow(*ownedType, arg);
+        return *this;
+    }
+};
 
 //=============================================================
 
