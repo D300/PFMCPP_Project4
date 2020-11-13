@@ -206,6 +206,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <memory>
 
 //============================================================
 struct A {};
@@ -222,17 +223,13 @@ private:
     A* a;
 };
 
+
 struct IntType;
 struct DoubleType;
 
 struct FloatType
 { 
-    FloatType(float ownedType_) : ownedFloat(new float (ownedType_)) { }
-    ~FloatType()
-    {
-        delete ownedFloat;
-        ownedFloat = nullptr;
-    }
+    FloatType(float ownedType_) : ownedFloat ( std::make_unique<float>(ownedType_) ) { }
  
     operator float() const { return *ownedFloat; }
 
@@ -252,7 +249,6 @@ struct FloatType
         return *this;
     }
 
-
     FloatType& apply( std::function<FloatType&(float&)> f) 
     { 
         if ( f )
@@ -270,20 +266,12 @@ struct FloatType
     }
 
 private:
-    float* ownedFloat;   
+    std::unique_ptr<float> ownedFloat;   
 };
-
-
-
 
 struct DoubleType
 {
-    DoubleType(double doubleValue) : ownedDouble(new double (doubleValue)) { }
-    ~DoubleType()
-    {
-        delete ownedDouble;
-        ownedDouble = nullptr;
-    }
+    DoubleType(double ownedType_) : ownedDouble ( std::make_unique<double>(ownedType_) ) { }
 
     operator double() const { return *ownedDouble; }
 
@@ -320,17 +308,12 @@ struct DoubleType
     }
 
 private:
-    double* ownedDouble;
+    std::unique_ptr<double> ownedDouble;
 };
 
 struct IntType
 {
-    IntType(int intVal) : ownedInt(new int(intVal)) { }
-    ~IntType()
-    {
-        delete ownedInt;
-        ownedInt = nullptr;
-    }
+    IntType(int ownedType_) : ownedInt(std::make_unique<int>(ownedType_)) { }
     
     operator int() const { return *ownedInt; }
 
@@ -367,7 +350,7 @@ struct IntType
     }
 
 private:
-    int* ownedInt; 
+    std::unique_ptr<int> ownedInt; 
 };
 
 //========================================================
