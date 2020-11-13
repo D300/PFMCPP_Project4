@@ -227,7 +227,7 @@ private:
 template <typename NumericType>
 struct Numeric
 {
-    using Type = NumericType;
+    using Type = NumericType; // did this already
     
     Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { }
  
