@@ -255,14 +255,36 @@ struct Numeric
         return *this;
     }
 
-    
-    Numeric& operator/=(Type value)
-    {
-        if (value == 0.0)
-        { 
-            std::cout << "this is not the final code!" << std::endl; 
-        }
+    /*
+    if your template type is an int
+                if your parameter's type is also an int
+                        if your parameter is 0
+                                don't do the division
+                else if it's less than epsilon
+                        dont do the divison
+        else if it's less than epsilon
+                warn about doing the division
+    */
 
+    template<typename DivType>
+    Numeric& operator/=(const DivType value)
+    {
+        if constexpr (std::is_same<Type, int>::value)
+            if constexpr ( std::is_same<DivType, int>::value)
+            {
+                if ( value == 0 )
+                    std::cout << "error: integer division by zero is an error and will crash the program!" <<std::endl;
+                    return *this;
+            }
+            else if (value < std::numeric_limits<DivType>::epsilon() )
+            {
+                std::cout << "can't divide integers by zero!" <<std::endl;
+                return *this;   
+            }
+        else if (value < std::numeric_limits<NumericType>::epsilon())
+        {
+            std::cout << "warning: floating point division by zero!" <<std::endl; 
+        }
         *ownedType /= value;
         return *this;
     }
@@ -585,6 +607,8 @@ void part7()
     std::cout << "Calling Numeric<float>::apply() using a lambda (adds 7.0f) and Numeric<float> as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
 
+
+    // #9
     {
         using ReturnType = decltype(ft3);
         using NumericType = decltype(ft3)::Type;
@@ -597,7 +621,7 @@ void part7()
         });
     }
 
-    ft3.apply(myNumericFreeFunct);
+    ft3.apply(myNumericFreeFunct);  
 
     std::cout << "ft3 after: " << ft3 << std::endl;
 
@@ -610,6 +634,7 @@ void part7()
     std::cout << "Calling Numeric<double>::apply() using a lambda (adds 6.0) and Numeric<double> as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
 
+    // #10
     {
         using Type = decltype(dt3);
         dt3.apply( [&dt3](std::unique_ptr<Type::Type>& d)
