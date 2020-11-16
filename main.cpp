@@ -14,20 +14,20 @@ Templates and Containers
     I recommend committing after you get each step working so you can revert to a working version easily if needed.
     it's very easy to mess this task up. 
 
-0) comment out part6(), both the function and where it is called. X
+0) comment out part6(), both the function and where it is called.
 
 #1) if you're not using std::unique_ptr to own your heap-allocated type as a member variable, 
-    replace your manual memory management techniques with a private std::unique_ptr member variable. X
+    replace your manual memory management techniques with a private std::unique_ptr member variable.
 
 #2) replace your Heap-Allocated Numeric Type-owning classes with a single templated class called 'Numeric'.
-        replace all instances of your previous classes (IntType, etc) with this templated class. X
+        replace all instances of your previous classes (IntType, etc) with this templated class.
 
 #3) add a 'using Type = <your class template parameter>;' 
         treat this type declaration via 'using' as a static member variable
         use this Type alias as the argument everywhere you previously used the template argument.
         this will make it very easy to change the type if needed.
             i.e. if you have 'std::unique_ptr<NumericType> value;' before
-                you'd replace NumericType in that variable declaration with 'Type' X
+                you'd replace NumericType in that variable declaration with 'Type'
         
 
 
@@ -36,20 +36,19 @@ Templates and Containers
     i.e. like this for determining the template parameter of the unique_ptr function argument to your class's apply() function
         std::unique_ptr< decltype( <instance of class> )::Type >
 
-
 #5) template your free function for the apply() that takes a function pointer so it can be used with your Wrapper class's apply() function
 
 #6) add an explicit template specialization for 'double' of your wrapper class
-        this template specialization will have one apply() function instead of 2. 
+        this template specialization will have one apply() function instead of 2.
 
 #7) this apply() function will be templated, and expect a Callable object, not std::function<>. 
         the function should allow for chaining.  
-        the callable object should return void, like the function pointer-based apply() function in the primary class template
+        the callable object should return void, like the function pointer-based apply() function in the primary class template X
 
-#8) instantiate your explicit template specialization
+#8) instantiate your explicit template specialization X
 
 #9) call the apply function twice, once with a lambda and once with the free function
-        the free function is templated, so you might need to call it including the template arguments.
+        the free function is templated, so you might need to call it including the template arguments. 
         
 #10) in addition to using the lambda argument to modify the owned object:  (your previous task's lambdas did this same thing) 
         make the lambda use your explicit template instance (maybe via a std::cout), 
@@ -277,7 +276,6 @@ struct Numeric
     //==================================================================
     //==================================================================
 
-    // callable
     Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> freeFunc) 
     { 
         if ( freeFunc )
@@ -367,7 +365,7 @@ struct Numeric<double>
     //==================================================================
     //==================================================================
 
-    template<typename Callable>
+    template<typename Callable>             // #7
     Numeric& apply( Callable callable_) 
     { 
         callable_(*ownedType);
@@ -395,7 +393,7 @@ void part3()
     Numeric<double> dt( 11.1 );
     Numeric<int> it ( 34 );
     Numeric<double> pi( 3.14 );
-    
+
     ft *= ft;
     ft *= ft;
     ft /= it;
@@ -575,19 +573,23 @@ void part6()
 }
 */
 
-/*
+
 void part7()
 {
     Numeric ft3(3.0f);
-    Numeric dt3(4.0);
+    Numeric dt3(4.0); // #8
     Numeric it3(5);
     
     std::cout << "Calling Numeric<float>::apply() using a lambda (adds 7.0f) and Numeric<float> as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
 
     {
-        using Type = #4;
-        ft3.apply( [](std::unique...){} );
+        using Type = decltype(ft3);
+        ft3.apply( [&ft3] (std::unique_ptr<Type::Type>& f) -> Type&
+        {  
+            *f += 7.0f;
+            return ft3;
+        });
     }
 
     std::cout << "ft3 after: " << ft3 << std::endl;
@@ -601,8 +603,12 @@ void part7()
     std::cout << "dt3 before: " << dt3 << std::endl;
 
     {
-        using Type = #4;
-        dt3.apply( [](std::unique...){} ); // This calls the templated apply fcn
+        using Type = decltype(dt3);
+        dt3.apply( [&dt3](std::unique_ptr<Type::Type>& d)
+        {
+            *d += 6.0;
+            return dt3;
+        }); // This calls the templated apply fcn
     }
     
     std::cout << "dt3 after: " << dt3 << std::endl;
@@ -626,7 +632,7 @@ void part7()
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
 }
-*/
+
 
 int main()
 {   
@@ -638,6 +644,8 @@ int main()
     Numeric<double> dt ( 2.0 );
     Numeric<int> it ( 2 ) ;
 
+    
+    
     ft += ft;
     std::cout << "FloatType add result=" << ft << std::endl;
     
@@ -710,7 +718,7 @@ int main()
 
     std::cout << "---------------------\n" << std::endl; 
     
-/*   
+    /*   
     // Intercept division by 0
     // --------
     std::cout << "Intercept division by 0 " << std::endl;
@@ -728,7 +736,7 @@ int main()
     std::cout << dt << std::endl;
 
     std::cout << "---------------------\n" << std::endl; 
-*/
+    */
 
 
     part3();
