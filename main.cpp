@@ -279,16 +279,16 @@ struct Numeric
     Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> freeFunc) 
     { 
         if ( freeFunc )
-            return f(*ownedType);
+            return freeFunc(ownedType);
         
         return *this;
     }
 
 
-    Numeric& apply(void(*freeFunc)(std::unique_ptr<Type>&)) 
+    Numeric& apply(void(*funcPtr)(std::unique_ptr<Type>&)) 
     {
-        if ( freeFunc )
-            f(*ownedType);
+        if ( funcPtr )
+            funcPtr(ownedType);
 
         return *this;
     }
@@ -312,7 +312,7 @@ private:
 template <typename Type>
 void myNumericFreeFunct(std::unique_ptr<Type>& value)
 {
-    value += 7.0f;
+    *value += 7.0f;
 }
 
 //=============================================================
@@ -368,7 +368,7 @@ struct Numeric<double>
     template<typename Callable>             // #7
     Numeric& apply( Callable callable_) 
     { 
-        callable_(*ownedType);
+        callable_(ownedType);
         return *this;
     }
 
@@ -387,6 +387,7 @@ private:
 
 //=============================================================
 
+/*
 void part3()
 {
     Numeric<float> ft( 5.5f );
@@ -434,7 +435,6 @@ void part3()
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it << std::endl;
 }
 
-/*
 void part4()
 {
     // ------------------------------------------------------------
@@ -518,11 +518,8 @@ void part4()
     p3.toString();   
     std::cout << "---------------------\n" << std::endl;
 }
-*/
 
-//=============================================================
 
-/*
 void part6()
 {
     FloatType ft3(3.0f);
@@ -580,19 +577,30 @@ void part7()
     Numeric dt3(4.0); // #8
     Numeric it3(5);
     
+    /*
+    #9) call the apply function twice, once with a lambda and once with the free function
+        the free function is templated, so you might need to call it including the template arguments. 
+    */
+
     std::cout << "Calling Numeric<float>::apply() using a lambda (adds 7.0f) and Numeric<float> as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
 
     {
-        using Type = decltype(ft3);
-        ft3.apply( [&ft3] (std::unique_ptr<Type::Type>& f) -> Type&
+        using ReturnType = decltype(ft3);
+        using NumericType = decltype(ft3)::Type;
+        
+        ft3.apply( [&ft3] (std::unique_ptr<NumericType>& f) -> ReturnType&
         {  
             *f += 7.0f;
+            std::cout << "explicit lambda result " << ft3 << std::endl;
             return ft3;
         });
     }
 
+    ft3.apply(myNumericFreeFunct);
+
     std::cout << "ft3 after: " << ft3 << std::endl;
+
     std::cout << "Calling Numeric<float>::apply() twice using a free function (adds 7.0f) and void as return type:" << std::endl;
     std::cout << "ft3 before: " << ft3 << std::endl;
     ft3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
@@ -607,11 +615,13 @@ void part7()
         dt3.apply( [&dt3](std::unique_ptr<Type::Type>& d)
         {
             *d += 6.0;
-            return dt3;
+            return &dt3;
         }); // This calls the templated apply fcn
     }
     
     std::cout << "dt3 after: " << dt3 << std::endl;
+   
+    /*
     std::cout << "Calling Numeric<double>::apply() twice using a free function (adds 7.0) and void as return type:" << std::endl;
     std::cout << "dt3 before: " << dt3 << std::endl;
     dt3.apply(myNumericFreeFunct<double>).apply(myNumericFreeFunct<double>); // This calls the templated apply fcn
@@ -622,15 +632,23 @@ void part7()
     std::cout << "it3 before: " << it3 << std::endl;
 
     {
-        using Type = #4;
-        it3.apply( [](std::unique...){} );
+        using Type = decltype(it3);
+        it3.apply( [&it3] (std::unique_ptr<Type::Type>& i)
+        {
+         
+        });
     }
     std::cout << "it3 after: " << it3 << std::endl;
+    
     std::cout << "Calling Numeric<int>::apply() twice using a free function (adds 7) and void as return type:" << std::endl;
+    
     std::cout << "it3 before: " << it3 << std::endl;
+    
     it3.apply(myNumericFreeFunct).apply(myNumericFreeFunct);
+
     std::cout << "it3 after: " << it3 << std::endl;
     std::cout << "---------------------\n" << std::endl;    
+    */
 }
 
 
@@ -739,10 +757,10 @@ int main()
     */
 
 
-    part3();
+    // part3();
     // part4();
-
     // part6();
+    part7();
 
     std::cout << "good to go!\n";
 
