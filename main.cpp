@@ -323,20 +323,15 @@ struct Numeric
     //==================================================================
     //==================================================================
 
-    Numeric& apply( std::function<Numeric&(std::unique_ptr<Type>&)> freeFunc) 
+    /*
+    4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
+    replace the 2 apply() functions in your Numeric<T> with the single templated apply() function from the specialized <double> template.
+    */
+
+    template<typename Callable>
+    Numeric& apply( Callable callable_) 
     { 
-        if ( freeFunc )
-            return freeFunc(ownedType);
-        
-        return *this;
-    }
-
-
-    Numeric& apply(void(*funcPtr)(std::unique_ptr<Type>&)) 
-    {
-        if ( funcPtr )
-            funcPtr(ownedType);
-
+        callable_(ownedType);
         return *this;
     }
 
@@ -356,76 +351,6 @@ void myNumericFreeFunct(std::unique_ptr<Type>& value)
 {
     *value += static_cast<Type>(7.0);
 }
-
-//=============================================================
-// #6 EXPLICIT TEMPLATE SPECIALIZATION 
-//=============================================================
-template <>
-struct Numeric<double>
-{
-    using Type = double;
-    
-    Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { }
- 
-    operator Type() const { return *ownedType; }
-
-    Numeric& operator +=( Type value )
-    {
-        *ownedType += value;
-        return *this;
-    }
-
-    Numeric& operator -=( Type value )
-    {
-        *ownedType -= value;
-        return *this;
-    }
-
-    Numeric& operator *=( Type value )
-    {
-        *ownedType *= value;
-        return *this;
-    }
-
-    Numeric& operator/=(Type value)
-    {
-        if (value == 0.0)
-        { 
-            std::cout << "warning: floating point division by zero!" << std::endl; 
-        }
-
-        *ownedType /= value;
-        return *this;
-    }
-    
-    // function
-    Numeric& pow(Type f)
-    {
-        return powInternal(static_cast<float>(f) );
-    }
-
-    //==================================================================
-    //==================================================================
-
-    template<typename Callable>             // #7
-    Numeric& apply( Callable callable_) 
-    { 
-        callable_(ownedType);
-        return *this;
-    }
-
-    //==================================================================
-    //==================================================================
-
-private:
-    std::unique_ptr<Type> ownedType; 
-
-    Numeric& powInternal(float arg)
-    {
-        *ownedType = std::pow(*ownedType, arg);
-        return *this;
-    }
-};
 
 //=============================================================
 
