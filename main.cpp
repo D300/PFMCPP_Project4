@@ -257,11 +257,9 @@ struct Numeric
 
     Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { } 
  
-    operator Type() const { return *ownedType; }
-
     // getter/setter
-    operator NumericType () const { return *ownedType; }
-    operator NumericType& () { return *ownedType; }
+    operator Type() const { return *ownedType; }
+    operator Type& () { return *ownedType; }
 
     
     // math operators
@@ -291,7 +289,7 @@ struct Numeric
     {
         if constexpr (std::is_same<NumericType, int>::value)
         {
-            if constexpr ( std::is_same<DivType, int>::value)
+            if constexpr ( std::is_same<OtherType, int>::value)
             {
                 if ( oVal == 0 )
                 {
@@ -299,16 +297,17 @@ struct Numeric
                     return *this;
                 }     
             }
-            else if (oVal < std::numeric_limits<DivType>::epsilon() )
+            else if (oVal < std::numeric_limits<OtherType>::epsilon() )
             {
                 std::cout << "can't divide integers by zero!" <<std::endl;
                 return *this;   
             }
         }
-        else if (oVal < std::numeric_limits<Type>::epsilon())
+        else if (oVal < std::numeric_limits<OtherType>::epsilon())
         {
             std::cout << "warning: floating point division by zero!" <<std::endl; 
         }
+
         *ownedType /= static_cast<NumericType>(oVal);
         return *this;
     }
