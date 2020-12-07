@@ -313,6 +313,13 @@ struct Numeric
     }
     
     // function
+    /*
+    5) Template your pow() function the same way you templated the overloaded math operators
+    Remove the call to powInternal() and just call std::pow() directly.
+    you'll need to static_cast<> the pow() argument the same way you did in the overloaded math operators, when you pass it to std::pow()
+    */
+
+
     template<typename OtherType>
     Numeric& pow(OtherType& oVal)
     {
