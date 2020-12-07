@@ -23,7 +23,9 @@ Create a branch named Part8
  1) Here is a starting point for how to implement your Temporary struct.
  */
 
+#include <iostream>
 #include <typeinfo>
+
 template<typename NumericType>
 struct Temporary
 {
@@ -36,8 +38,8 @@ struct Temporary
      revise these conversion functions to read/write to 'v' here
      hint: what qualifier do read-only functions usually have?
      */
-    operator ___() { /* read-only function */ }
-    operator ___() { /* read/write function */ }
+    operator NumericType() const { return v; } /* read-only function */
+    operator NumericType&() { return v; } /* read/write function */
 private:
     static int counter;
     NumericType v;
