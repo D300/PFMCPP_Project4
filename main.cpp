@@ -59,6 +59,8 @@ int Temporary<NumericType>::counter {0};
  3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
     use static_cast to convert whatever type is passed in to your template's NumericType before performing the +=, -=, etc.  here's an example implementation:
  */
+
+/*
 namespace example
 {
 template<typename NumericType>
@@ -74,6 +76,7 @@ struct Numeric
     //snip
 };
 }
+*/
 
 /*
  4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
@@ -131,6 +134,7 @@ i cubed: 531441
 Use a service like https://www.diffchecker.com/diff to compare your output. 
 */
 
+/*
 #include <iostream>
 int main()
 {
@@ -212,7 +216,7 @@ int main()
         std::cout << "i cubed: " << i << std::endl;
     }
 }
-
+*/
 
 
 
@@ -240,64 +244,81 @@ private:
 //=============================================================
 // #3 PRIMARY TEMPLATE
 //=============================================================
+
+/*
+ 3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
+    use static_cast to convert whatever type is passed in to your template's NumericType before performing the +=, -=, etc.  here's an example implementation:
+ */
+
 template <typename NumericType>
 struct Numeric
 {
     using Type = NumericType;
-    
-    Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { }
+
+    Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { } 
  
     operator Type() const { return *ownedType; }
 
-    Numeric& operator +=( const Type value )
+    // getter/setter
+    operator NumericType () const { return *ownedType; }
+    operator NumericType& () { return *ownedType; }
+
+    
+    // math operators
+    template<typename OtherType>
+    Numeric& operator +=( const OtherType& oVal )
     {
-        *ownedType += value;
+        *ownedType += static_cast<NumericType>(oVal);
         return *this;
     }
 
-    Numeric& operator -=( const Type value )
+    template<typename OtherType>
+    Numeric& operator -=( const OtherType oVal )
     {
-        *ownedType -= value;
+        *ownedType -= static_cast<NumericType>(oVal);
         return *this;
     }
 
-    Numeric& operator *=( const Type value )
+    template<typename OtherType>
+    Numeric& operator *=( const OtherType oVal )
     {
-        *ownedType *= value;
+        *ownedType *= static_cast<NumericType>(oVal);
         return *this;
     }
 
-    template<typename DivType>
-    Numeric& operator/=(const DivType& value)
+    template<typename OtherType>
+    Numeric& operator/=(const OtherType& oVal)
     {
         if constexpr (std::is_same<NumericType, int>::value)
         {
             if constexpr ( std::is_same<DivType, int>::value)
             {
-                if ( value == 0 )
+                if ( oVal == 0 )
                 {
                     std::cout << "can't divide integers by zero!" <<std::endl;
                     return *this;
                 }     
             }
-            else if (value < std::numeric_limits<DivType>::epsilon() )
+            else if (oVal < std::numeric_limits<DivType>::epsilon() )
             {
                 std::cout << "can't divide integers by zero!" <<std::endl;
                 return *this;   
             }
         }
-        else if (value < std::numeric_limits<Type>::epsilon())
+        else if (oVal < std::numeric_limits<Type>::epsilon())
         {
             std::cout << "warning: floating point division by zero!" <<std::endl; 
         }
-        *ownedType /= value;
+        *ownedType /= static_cast<NumericType>(oVal);
         return *this;
     }
     
     // function
-    Numeric& pow(Type f)
+    template<typename OtherType>
+    Numeric& pow(OtherType& oVal)
     {
-        return powInternal(f);
+        *ownedType = static_cast<Type>(std::pow( *ownedType, static_cast<NumericType>(oVal) );
+        return *this;
     }
 
     //==================================================================
@@ -326,11 +347,6 @@ struct Numeric
 private:
     std::unique_ptr<Type> ownedType; 
 
-    Numeric& powInternal(const Type arg)
-    {
-        *ownedType = static_cast<int>(std::pow(*ownedType, arg));
-        return *this;
-    }
 };
 
 //========================================================
