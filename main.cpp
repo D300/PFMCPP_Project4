@@ -91,6 +91,16 @@ struct Temporary
                   << counter++ << std::endl;
     }
 
+    Temporary(Temporary&& other) : v(std::move(other.v)) { }
+
+    Temporary& operator=(Temporary&& other) 
+    {
+        v = std::move(other.v); 
+        return *this;       
+    }
+
+    ~Temporary() = default;
+
     operator NumericType() const { return v; } /* read-only function */
     operator NumericType&() { return v; } /* read/write function */
 private:
@@ -125,6 +135,10 @@ struct Numeric
     using Type = Temporary<NumericType>;
 
     Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { } 
+    
+    
+    
+    
     operator Type() const { return *ownedType; }
     
     operator NumericType () const { return *ownedType; }    //read only
