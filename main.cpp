@@ -124,7 +124,7 @@ struct Numeric
 {
     using Type = Temporary<NumericType>;
 
-    Numeric(Type ownedType_) : ownedType ( std::make_unique<Type>(ownedType_) ) { } 
+    Numeric(NumericType ownedType_) : ownedType ( std::make_unique<Type> (ownedType_) ) { } 
     
     // rule of 5
     /*
